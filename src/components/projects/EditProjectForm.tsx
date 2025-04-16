@@ -1,48 +1,61 @@
-import ProjectForm from "@/components/projects/ProjectForm";
-import { createProject } from "@/services/ProjectService";
-import { ProjectFormData } from "@/types";
-import { useMutation } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import ProjectForm from "./ProjectForm";
+import { Project, ProjectFormData } from "@/types";
+import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateProject } from "@/services/ProjectService";
 import { toast } from "react-toastify";
 
-export default function CreateProjectView() {
+type EditProjectFormProps = {
+    data: ProjectFormData,
+    projectId: Project['_id']
+}
 
-    const navigate = useNavigate()
+export default function EditProjectForm({ data, projectId }: EditProjectFormProps) {
 
+    /* podrian hacerse en un solo paso pero lo dejo asi para que quede claro que son los valores iniciales
+    que queremos en la parte de editar */
     const initialValues: ProjectFormData = {
-        projectName: "",
-        clientName: "",
-        description: ""
+        projectName: data.projectName,
+        clientName: data.clientName,
+        description: data.description
     }
     const { register, handleSubmit, formState: { errors } } = useForm({ defaultValues: initialValues })
 
+    const navigate = useNavigate()
 
-    const mutation = useMutation({
-        mutationFn: createProject,
+
+    const queryClient = useQueryClient()
+
+    const { mutate } = useMutation({
+        mutationFn: updateProject,
         onError: (error) => {
             toast.error(error.message)
         },
         /* ese data viene del return del controller */
         onSuccess: (data) => {
+            //los queryKeys que pasamos aca son los queramos de los demas useQuerys.
+            queryClient.invalidateQueries({ queryKey: ['projects'] })
+            queryClient.invalidateQueries({ queryKey: ['editProject', projectId] })
             //es el cartel que sale cuando creamos un proyecto
             toast.success(data)
             navigate('/')
         }
-
     })
 
-    //con ".mutate" react query maneja las funciones asincronas en automatico
     const handleForm = (formData: ProjectFormData) => {
-        //se le pasa desde aca el parametro al createProject
-        mutation.mutate(formData)
+        const data = {
+            formData,
+            projectId
+        }
+        mutate(data)
     }
 
     return (
         <>
             <div className="max-w-3xl mx-auto">
-                <h1 className="text-5xl font-black">Crear Proyecto</h1>
-                <p className="text-2xl font-light text-gray-500 mt-5">Llena el siguiente formulario para crear un proyecto</p>
+                <h1 className="text-5xl font-black">Editar Proyecto</h1>
+                <p className="text-2xl font-light text-gray-500 mt-5">Llena el siguiente formulario para editar el proyecto</p>
 
                 <div className="my-5">
                     <Link
@@ -67,7 +80,7 @@ export default function CreateProjectView() {
 
                     <input
                         type="submit"
-                        value="Crear Proyecto"
+                        value="Guardar Cambios"
                         className="bg-fuchsia-600 hover:bg-fuchsia-700 w-full p-3 text-white uppercase font-bold cursor-pointer transition-colors"
                     />
                 </form>
