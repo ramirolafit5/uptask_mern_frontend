@@ -1,5 +1,6 @@
 import Logo from "@/components/Logo";
 import { Outlet } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 export default function AuthLayout() {
     return (
@@ -13,7 +14,11 @@ export default function AuthLayout() {
                 </div>
             </div>
 
-
+            <ToastContainer
+                /* esto es para que cuando tengamos el mouse arriba de la notificacion no se frene */
+                pauseOnFocusLoss={false}
+                pauseOnHover={false}
+            />
         </>
     )
 }

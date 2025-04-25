@@ -16,7 +16,9 @@ export async function createProject(formData : ProjectFormData){
 
 export async function getProjects(){
     try {
+        //manejamos la autorizacion desde axios y aca la usamos cuando llamamos a "api"
         const {data} = await api.get('/projects')
+
         const response = dashboardProjectSchema.safeParse(data)
         /* aca en vez de devolver solo data como en createProject, verificamos que el response sea success
         y lo devolvemos como viene desde el schema que creamos */
