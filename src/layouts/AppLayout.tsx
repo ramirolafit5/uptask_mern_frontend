@@ -7,9 +7,11 @@ import { useAuth } from "@/hooks/useAuth"
 export default function AppLayout() {
 
     const { data, isError, isLoading } = useAuth()
-    console.log(data)
 
     const navigate = useNavigate()
+
+    /* ACLARACION: lo siguiente significa.. mientras carga devolve "Cargando", si hay algun error navega
+    al login y si hay data devolve el return con la informacion */
 
     if (isLoading) return 'Cargando maquinen..'
     if (isError) {
@@ -17,7 +19,7 @@ export default function AppLayout() {
         return
     }
 
-    return (
+    if (data) return (
         <>
             <header className="bg-gray-800 py-5">
                 <div className="max-w-screen-2xl mx-auto flex flex-col lg:flex-row justify-between items-center">
@@ -26,7 +28,9 @@ export default function AppLayout() {
                             <Logo />
                         </Link>
                     </div>
-                    <NavMenu />
+                    <NavMenu
+                        name={data.name}
+                    />
 
                 </div>
             </header>

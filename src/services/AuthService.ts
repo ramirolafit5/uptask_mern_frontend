@@ -1,5 +1,5 @@
 import api from "@/lib/axios";
-import { ConfirmToken, ForgotPasswordForm, NewPasswordForm, RequestConfirmationCodeForm, UserLoginForm, UserRegistrationForm } from "@/types";
+import { ConfirmToken, ForgotPasswordForm, NewPasswordForm, RequestConfirmationCodeForm, UserLoginForm, UserRegistrationForm, userSchema } from "@/types";
 import { isAxiosError } from "axios";
 
 
@@ -92,10 +92,14 @@ export async function updatePasswordWithToken ({formData, token} : {formData:New
 export async function getUser (){
     try {
         const {data} = await api.get('/auth/user')
-        return data
+        const response = userSchema.safeParse(data)
+        if(response.success){
+            return response.data
+        }
     } catch (error) {
         if(isAxiosError(error) && error.response){
             throw new Error(error.response.data.error)
         }
+        throw error;
     }
 }

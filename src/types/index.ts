@@ -24,6 +24,17 @@ export type ForgotPasswordForm = Pick<Auth, 'email'>
 
 export type NewPasswordForm = Pick<Auth, 'password' | 'password_confirmation'>
 
+/** Users */
+
+//podria hacerse como cualquier esquema pero esta es otra alternativa
+export const userSchema = authSchema.pick({
+    name: true,
+    email: true
+}).extend({
+    _id: z.string()
+})
+export type User = z.infer<typeof userSchema>
+
 /** Tasks */
 
 export const taskStatusSchema = z.enum(["pending", "onHold", "inProgress", "underReview", "completed"])
@@ -37,7 +48,12 @@ export const taskSchema = z.object({
     project: z.string(),
     status: taskStatusSchema,
     createdAt: z.string(),
-    updatedAt: z.string()
+    updatedAt: z.string(),
+    completedBy: z.array(z.object({
+        _id: z.string(),
+        user: userSchema,
+        status: taskStatusSchema
+    }))
 })
 
 export type Task = z.infer<typeof taskSchema>
@@ -48,7 +64,8 @@ export const projectSchema = z.object({
     _id: z.string(),
     projectName: z.string(),
     clientName: z.string(),
-    description: z.string()
+    description: z.string(),
+    manager: z.string(userSchema.pick({_id: true}))
 })
 
 export type Project = z.infer<typeof projectSchema>
@@ -63,6 +80,17 @@ export const dashboardProjectSchema = z.array(
         _id: true,
         projectName: true,
         clientName: true,
-        description: true
+        description: true,
+        manager: true
     })
 )
+
+/** Teams */
+export const TeamMemberSchema = userSchema.pick({
+    name: true,
+    email: true,
+    _id: true
+})
+export const TeamMembersSchema = z.array(TeamMemberSchema)
+export type TeamMember = z.infer<typeof TeamMemberSchema>
+export type TeamMemberForm = Pick<TeamMember, 'email'>
