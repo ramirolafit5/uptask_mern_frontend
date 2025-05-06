@@ -6,6 +6,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom"
 import { toast } from "react-toastify"
 import { Fragment } from "react/jsx-runtime"
+import CircularIndeterminate from "@/components/spinner"
 
 export default function ProjectTeamView() {
 
@@ -32,8 +33,8 @@ export default function ProjectTeamView() {
         }
     })
 
+    if (isLoading) return <CircularIndeterminate />
 
-    if (isLoading) return 'Cargando..'
     if (isError) return <Navigate to={'/404'} />
 
     if (data) return (

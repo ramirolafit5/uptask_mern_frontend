@@ -3,6 +3,7 @@ import Logo from "@/components/Logo"
 import NavMenu from "@/components/NavMenu"
 import { ToastContainer } from 'react-toastify'
 import { useAuth } from "@/hooks/useAuth"
+import CircularIndeterminate from "@/components/spinner"
 
 export default function AppLayout() {
 
@@ -13,7 +14,7 @@ export default function AppLayout() {
     /* ACLARACION: lo siguiente significa.. mientras carga devolve "Cargando", si hay algun error navega
     al login y si hay data devolve el return con la informacion */
 
-    if (isLoading) return 'Cargando maquinen..'
+    if (isLoading) return <CircularIndeterminate />
     if (isError) {
         navigate('/auth/login')
         return
