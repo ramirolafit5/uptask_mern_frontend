@@ -27,6 +27,8 @@ export type NewPasswordForm = Pick<Auth, 'password' | 'password_confirmation'>
 
 export type UpdateCurrentUserPasswordForm = Pick<Auth, 'current_password' | 'password' | 'password_confirmation'>
 
+export type CheckPasswordForm = Pick<Auth, 'password'>
+
 /** Users */
 
 //podria hacerse como cualquier esquema pero esta es otra alternativa
