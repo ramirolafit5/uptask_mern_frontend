@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { RequestConfirmationCodeForm } from "../../types";
 import ErrorMessage from "@/components/ErrorMessage";
@@ -13,8 +13,6 @@ export default function RegisterView() {
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm({ defaultValues: initialValues });
 
-    const navigate = useNavigate()
-
     const { mutate } = useMutation({
         mutationFn: requestConfirmationCode,
         onError: (error) => {
@@ -22,7 +20,7 @@ export default function RegisterView() {
         },
         onSuccess: (data) => {
             toast.success(data)
-            navigate('/auth/#')
+            reset()
         }
     })
 

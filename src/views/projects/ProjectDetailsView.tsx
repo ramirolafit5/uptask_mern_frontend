@@ -3,7 +3,7 @@ import EditTaskDate from "@/components/tasks/EditTaskDate"
 import TaskList from "@/components/tasks/TaskList"
 import TaskModalDetails from "@/components/tasks/TaskModalDetails"
 import { useAuth } from "@/hooks/useAuth"
-import { getProjectById } from "@/services/ProjectService"
+import { getFullProjectDetails } from "@/services/ProjectService"
 import { isManager } from "@/utils/policies"
 import { useQuery } from "@tanstack/react-query"
 import { useMemo } from "react"
@@ -18,7 +18,7 @@ export default function ProjectDetailsView() {
 
     const { data, isLoading, isError } = useQuery({
         queryKey: ['editProject', projectId],
-        queryFn: () => getProjectById(projectId),
+        queryFn: () => getFullProjectDetails(projectId),
         retry: false //aca decimos que solo intente una vez (sino por defecto son 3)
     })
 

@@ -1,14 +1,14 @@
-import { Task } from "@/types"
+import { TaskProject } from "@/types"
 import TaskCard from "./TaskCard"
 import { statusTranslation } from "@/locales/es"
 
 type TaskListProps = {
-    tasks: Task[]
+    tasks: TaskProject[]
     canEdit: boolean
 }
 
 type GroupedTasks = {
-    [key: string]: Task[]
+    [key: string]: TaskProject[]
 }
 
 const initialStatusGroups: GroupedTasks = {
